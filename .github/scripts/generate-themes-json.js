@@ -6,7 +6,7 @@ const { execSync } = require("child_process");
 const SRC = path.join(__dirname, "..", "..", "src");
 const OUT = path.join(__dirname, "..", "..", "themes.json");
 
-const GITHUB_OWNER = "santiagolxx";
+const GITHUB_OWNER = "CubicLauncherDevs";
 const GITHUB_REPO = "Themes";
 const GITHUB_BRANCH = "master";
 const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}`;
@@ -18,7 +18,10 @@ function rawUrl(relativePath) {
 
 function generateSlug(author, name) {
   const s = `${author}-${name}`;
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 function naturalSort(a, b) {
@@ -44,10 +47,11 @@ function naturalSort(a, b) {
 function getFileDate(filePath) {
   try {
     const rel = path.relative(path.join(__dirname, "..", ".."), filePath);
-    const log = execSync(
-      `git log -1 --format="%aI" -- "${rel}"`,
-      { cwd: path.join(__dirname, "..", ".."), encoding: "utf-8", stdio: ["pipe", "pipe", "ignore"] }
-    ).trim();
+    const log = execSync(`git log -1 --format="%aI" -- "${rel}"`, {
+      cwd: path.join(__dirname, "..", ".."),
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "ignore"],
+    }).trim();
     return log || null;
   } catch {
     return null;
@@ -64,13 +68,15 @@ function readFileSafe(filePath) {
 
 const themes = [];
 
-const authorDirs = fs.readdirSync(SRC, { withFileTypes: true })
-  .filter(d => d.isDirectory() && !d.name.startsWith("."));
+const authorDirs = fs
+  .readdirSync(SRC, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && !d.name.startsWith("."));
 
 for (const authorDir of authorDirs) {
   const author = authorDir.name;
-  const themeDirs = fs.readdirSync(path.join(SRC, author), { withFileTypes: true })
-    .filter(d => d.isDirectory());
+  const themeDirs = fs
+    .readdirSync(path.join(SRC, author), { withFileTypes: true })
+    .filter((d) => d.isDirectory());
 
   for (const themeDir of themeDirs) {
     const name = themeDir.name;
@@ -79,8 +85,9 @@ for (const authorDir of authorDirs) {
 
     const themeMd = readFileSafe(path.join(themePath, "theme.md"));
 
-    const versionDirs = fs.readdirSync(themePath, { withFileTypes: true })
-      .filter(d => d.isDirectory() && !d.name.startsWith("."));
+    const versionDirs = fs
+      .readdirSync(themePath, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && !d.name.startsWith("."));
 
     const versions = [];
 
@@ -90,19 +97,28 @@ for (const authorDir of authorDirs) {
 
       const files = fs.readdirSync(vPath);
 
-      const zipFile = files.find(f => f.toLowerCase().endsWith(".zip"));
-      const previewFile = files.find(f => f.toLowerCase() === "showcase.png");
-      const changelogFile = files.find(f => f.toLowerCase() === "changelog.md");
+      const zipFile = files.find((f) => f.toLowerCase().endsWith(".zip"));
+      const previewFile = files.find((f) => f.toLowerCase() === "showcase.png");
+      const changelogFile = files.find(
+        (f) => f.toLowerCase() === "changelog.md",
+      );
 
       if (!zipFile) continue;
 
       const filePath = path.join(vPath, zipFile);
       const zipDate = getFileDate(filePath);
 
-      const relativeDir = path.relative(path.join(__dirname, "..", ".."), vPath);
-      const previewUrl = previewFile ? rawUrl(`${relativeDir}/${previewFile}`) : "";
+      const relativeDir = path.relative(
+        path.join(__dirname, "..", ".."),
+        vPath,
+      );
+      const previewUrl = previewFile
+        ? rawUrl(`${relativeDir}/${previewFile}`)
+        : "";
       const zipUrl = rawUrl(`${relativeDir}/${zipFile}`);
-      const changelog = changelogFile ? readFileSafe(path.join(vPath, changelogFile)) : null;
+      const changelog = changelogFile
+        ? readFileSafe(path.join(vPath, changelogFile))
+        : null;
 
       versions.push({
         version: versionName,
