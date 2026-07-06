@@ -10,4 +10,5 @@ Una actualización masiva que transforma por completo la interfaz con una estét
 * **Efecto CRT (Retro TV):** Filtro visual inmersivo con líneas de escaneo (scanlines) simulando un televisor de tubo antiguo.
 * **Nueva Sidebar (Barra Lateral):** Menú de navegación reubicado al lado derecho para mejorar la legibilidad y gestión de la información de **Mods, Recursos y Shaders**.
 * **Menús y Overlays Vivos:** Nuevas animaciones suaves y reactivas para todos los botones y menús desplegables.
+
 -# Edgajuman 
